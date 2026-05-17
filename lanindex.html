@@ -1,0 +1,58 @@
+рок сам выберет блок
+        } else {
+            // Если ничего, просто сбросим состояние блоков
+            updateBlocksState();
+        }
+        // Дополнительно перепроверим кнопку
+        updateUI();
+    }
+
+    // Изменение ставки
+    function changeBet(delta) {
+        if (gamePhase !== "idle") {
+            gameInfoSpan.innerText = "Изменить ставку можно только между раундами!";
+            return;
+        }
+        let newVal = currentBet + delta;
+        if (newVal < 10) newVal = 10;
+        if (newVal > balance && balance > 0) newVal = balance;
+        if (newVal <= 0) newVal = 10;
+        currentBet = newVal;
+        betInput.value = currentBet;
+        updateUI();
+    }
+
+    // Ручной ввод ставки
+    function handleBetInput() {
+        let raw = parseInt(betInput.value);
+        if (isNaN(raw)) raw = 10;
+        if (raw < 10) raw = 10;
+        if (raw > balance && balance > 0) raw = balance;
+        if (raw <= 0) raw = 10;
+        currentBet = raw;
+        betInput.value = currentBet;
+        updateUI();
+    }
+
+    // Инициализация игры и событий
+    function initGame() {
+        createBlocks();
+        updateUI();
+        // События
+        spinBtn.addEventListener("click", () => spinRoulette());
+        document.getElementById("betMinus").addEventListener("click", () => changeBet(-10));
+        document.getElementById("betPlus").addEventListener("click", () => changeBet(10));
+        betInput.addEventListener("change", handleBetInput);
+        betInput.addEventListener("input", function() {
+            let val = parseInt(this.value);
+            if (!isNaN(val) && val > 0) {
+                if (val > balance) this.value = balance;
+            }
+        });
+        gameInfoSpan.innerText = "🔨 Крути рулетку, получай молоток и круши блоки!";
+    }
+
+    initGame();
+</script>
+</body>
+</html>#ffb3
